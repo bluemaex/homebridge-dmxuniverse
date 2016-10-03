@@ -1,0 +1,19 @@
+{
+  "bridge": {
+    "name": "homebridge-dmxuniverse-sample",
+    "username": "DE:AD:BE:EF:BA:BE",
+    "port": 51826,
+    "pin": "031-45-154"
+  },
+  "description": "homebridge-dmxuniverse configuration sample",
+  "hint": "Yes it is.",
+  "platforms": [
+    {
+      "platform": "DmxPlatform",
+      "name": "DMX",
+      "dmx": {
+        "list": "http://localhost:8080/config"
+      }
+    }
+  ]
+}
