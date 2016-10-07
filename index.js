@@ -49,12 +49,19 @@ DmxPlatform.prototype.createDevice = function(universe, device) {
     return this.log(`${name} already exists`)
   }
 
+  if(!DeviceDriver.hasOwnProperty(device.type)) {
+    this.log(`Ignoring Accessory ${name}: No driver found for type ${device.type}`)
+    return
+  }
+
   this.log(`Creating Accessory ${name}`)
   const accessory = new Accessory(name, UUIDGen.generate(name))
   accessory.context.universe = universe
   accessory.context.device = device
 
+  this.setManufacturer(accessory)
   this.configureAccessory(accessory)
+
   this.api.registerPlatformAccessories(pluginName, platformName, [accessory])
 }
 
@@ -62,6 +69,7 @@ DmxPlatform.prototype.configureAccessory = function(accessory) {
   this.log(`Configuring Accessory ${accessory.displayName}`)
 
   const driver = this.getDeviceDriver(accessory)
+  driver.setupCharacteristics()
   driver.configure()
   this.devices[accessory.displayName] = driver
 
@@ -69,6 +77,11 @@ DmxPlatform.prototype.configureAccessory = function(accessory) {
 }
 
 DmxPlatform.prototype.getDeviceDriver = function(accessory) {
+  const type = accessory.context.device.type
+  return new DeviceDriver[type](accessory, this.log, this.config.dmx)
+}
+
+DmxPlatform.prototype.setManufacturer = function(accessory) {
   const device = accessory.context.device
   const universe = accessory.context.universe
 
@@ -76,12 +89,4 @@ DmxPlatform.prototype.getDeviceDriver = function(accessory) {
     .setCharacteristic(Characteristic.Manufacturer, `Blmx${platformName}`)
     .setCharacteristic(Characteristic.SerialNumber, `${universe}:${device.address}`)
     .setCharacteristic(Characteristic.Model, device.type)
-
-  let driver
-  switch(device.type) {
-    default:
-      driver = new DeviceDriver.RGB(accessory, this.log, this.config.dmx)
-  }
-
-  return driver
 }

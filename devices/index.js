@@ -1,5 +1,5 @@
 const RGB = require('./rgb')
 
 module.exports = {
-  RGB
+  'eurolite-led-bar': RGB
 }
