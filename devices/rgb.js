@@ -6,23 +6,15 @@ var utils = require('./_utils')
 function RgbAccessory(accessory, log, config) {
   this.log = log
   this.accessory = accessory
-  this.url = config.state + '/' + this.accessory.context.universe
-  this.offsets = this.getOffsets()
+  this.config = config
+
+  this.stateUrl = config.state + '/' + accessory.context.universe
+  this.offsets = utils.calculateOffsets(this.accessory)
 
   this.power = 0
   this.brightness = 0
   this.hue = 0
   this.saturation = 0
-}
-
-RgbAccessory.prototype.getOffsets = function() {
-  const device = this.accessory.context.device
-  let offsets = {}
-
-  device.config.channels.forEach((v, k) => { offsets[v] = device.address + k } )
-  this.log('offsets', offsets)
-
-  return offsets
 }
 
 RgbAccessory.prototype.setupCharacteristics = function() {
@@ -100,7 +92,7 @@ RgbAccessory.prototype.setState = function(who, value, callback) {
 }
 
 RgbAccessory.prototype.getDmxState = function() {
-  return utils.httpGet(this.url)
+  return utils.httpGet(this.stateUrl)
     .then((body) => {
       const rgb = {
         r: body.state[this.offsets.red0],
@@ -147,7 +139,7 @@ RgbAccessory.prototype.setDmxState = function(callback) {
   }
 
   this.log('sending', data, this.url)
-  return utils.httpPost(this.url, data)
+  return utils.httpPost(this.stateUrl, data)
 }
 
 module.exports = RgbAccessory
