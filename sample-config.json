@@ -12,7 +12,8 @@
       "platform": "DmxPlatform",
       "name": "DMX",
       "dmx": {
-        "list": "http://localhost:8080/config"
+        "list": "http://localhost:8080/config",
+        "state": "http://localhost:8080/state"
       }
     }
   ]
