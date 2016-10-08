@@ -35,27 +35,51 @@ DmxPlatform.prototype.getDmxUniverses = function() {
 
     Object.keys(body.universes).forEach((universe) => {
       body.universes[universe].forEach((device) => {
+        device.name = device.name || [universe, device.type, device.address].join('-')
         device.config = body.devices[device.type]
-        this.createDevice(universe, device)
+
+        this.handleDmxDevice(universe, device)
       })
     })
   })
 }
 
-DmxPlatform.prototype.createDevice = function(universe, device) {
-  const name = device.name || [universe, device.type, device.address].join('-')
-  const exists = this.accessories.find((a) => a.displayName === name)
-  if(exists) {
-    return this.log(`${name} already exists`)
+DmxPlatform.prototype.handleDmxDevice = function(universe, device) {
+  switch(device.type) {
+    case 'eurolite-led-bar': {
+      this.log('eurolite-led-bar', device.name)
+      return this.checkDeviceExistance(device.name)
+        ? null
+        : this.createDevice(universe, device)
+    }
+    case 'showtec-multidim2': {
+      this.log('showtec-multidim2', device.name)
+      device.config.channels.forEach((channel, num) => {
+        const newDevice = Object.assign({}, device, {
+          name: device.name + ':' + channel,
+          channels: [channel],
+          subNum: num
+        })
+        return this.checkDeviceExistance(newDevice.name)
+          ? null
+          : this.createDevice(universe, newDevice)
+      })
+    }
   }
+}
 
+DmxPlatform.prototype.checkDeviceExistance = function(name) {
+  return this.accessories.find((a) => a.displayName === name)
+}
+
+DmxPlatform.prototype.createDevice = function(universe, device) {
   if(!DeviceDriver.hasOwnProperty(device.type)) {
-    this.log(`Ignoring Accessory ${name}: No driver found for type ${device.type}`)
+    this.log(`Ignoring Accessory ${device.name}: No driver found for type ${device.type}`)
     return
   }
 
-  this.log(`Creating Accessory ${name}`)
-  const accessory = new Accessory(name, UUIDGen.generate(name))
+  this.log(`Creating Accessory ${device.name}`)
+  const accessory = new Accessory(device.name, UUIDGen.generate(device.name))
   accessory.context.universe = universe
   accessory.context.device = device
 
