@@ -35,6 +35,7 @@ RgbAccessory.prototype.setupCharacteristics = function() {
 }
 
 RgbAccessory.prototype.configure = function() {
+  this.log('offsets for ', this.accessory.displayName, this.offsets)
   const service = this.accessory.getService(Service.Lightbulb)
 
   service
@@ -122,23 +123,13 @@ RgbAccessory.prototype.setDmxState = function(callback) {
   this.log('hsv', hsv, 'to rgb', rgb)
 
   var data = {
-    [this.offsets.ctrl]: this.power,
+    [this.offsets.ctrl]: this.power ? 16 : 0,
+    [this.offsets.dimmer]: 255,
     [this.offsets.red0]: rgb.r,
     [this.offsets.green0]: rgb.g,
     [this.offsets.blue0]: rgb.b
   }
-  if(this.offsets.red1) {
-    data[this.offsets.red1] = rgb.r,
-    data[this.offsets.green1] = rgb.g,
-    data[this.offsets.blue1] =  rgb.b
-  }
-  if(this.offsets.red2) {
-    data[this.offsets.red2] = rgb.r,
-    data[this.offsets.green2] = rgb.g,
-    data[this.offsets.blue2] = rgb.b
-  }
 
-  this.log('sending', data, this.url)
   return utils.httpPost(this.stateUrl, data)
 }
 
