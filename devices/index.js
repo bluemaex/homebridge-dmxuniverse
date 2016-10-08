@@ -1,7 +1,4 @@
-const Rgb = require('./rgb')
-const Dimmer = require('./dimmer')
-
 module.exports = {
-  'eurolite-led-bar': Rgb,
-  'showtec-multidim2': Dimmer,
+  'eurolite-led-bar': require('./eurolite-led-bar'),
+  'showtec-multidim2': require('./showtec-multidim2'),
 }

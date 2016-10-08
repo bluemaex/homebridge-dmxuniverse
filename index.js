@@ -48,31 +48,31 @@ DmxPlatform.prototype.handleDmxDevice = function(universe, device) {
   switch(device.type) {
     case 'eurolite-led-bar': {
       this.log('eurolite-led-bar', device.name)
-      return this.checkDeviceExistance(device.name)
+      return this.findAccessory(device.name)
         ? null
-        : this.createDevice(universe, device)
+        : this.createAccessory(universe, device)
     }
     case 'showtec-multidim2': {
       this.log('showtec-multidim2', device.name)
       device.config.channels.forEach((channel, num) => {
-        const newDevice = Object.assign({}, device, {
+        const subDevice = Object.assign({}, device, {
           name: device.name + ':' + channel,
           channels: [channel],
           subNum: num
         })
-        return this.checkDeviceExistance(newDevice.name)
+        return this.findAccessory(subDevice.name)
           ? null
-          : this.createDevice(universe, newDevice)
+          : this.createAccessory(universe, subDevice)
       })
     }
   }
 }
 
-DmxPlatform.prototype.checkDeviceExistance = function(name) {
+DmxPlatform.prototype.findAccessory = function(name) {
   return this.accessories.find((a) => a.displayName === name)
 }
 
-DmxPlatform.prototype.createDevice = function(universe, device) {
+DmxPlatform.prototype.createAccessory = function(universe, device) {
   if(!DeviceDriver.hasOwnProperty(device.type)) {
     this.log(`Ignoring Accessory ${device.name}: No driver found for type ${device.type}`)
     return
