@@ -35,7 +35,6 @@ RgbAccessory.prototype.setupCharacteristics = function() {
 }
 
 RgbAccessory.prototype.configure = function() {
-  this.log('offsets for ', this.accessory.displayName, this.offsets)
   const service = this.accessory.getService(Service.Lightbulb)
 
   service

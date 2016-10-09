@@ -98,6 +98,9 @@ DmxPlatform.prototype.configureAccessory = function(accessory) {
   this.devices[accessory.displayName] = driver
 
   this.accessories.push(accessory)
+
+  const offsets = accessory.dmx.offsets || accessory.dmx.offset
+  this.log(`offsets for ${accessory.displayName} are ${JSON.stringify(offsets)}`)
 }
 
 DmxPlatform.prototype.getDeviceDriver = function(accessory) {

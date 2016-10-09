@@ -26,7 +26,6 @@ DimmerAccessory.prototype.setupCharacteristics = function() {
 }
 
 DimmerAccessory.prototype.configure = function() {
-  this.log('offsets for ', this.accessory.displayName, this.offset)
   const service = this.accessory.getService(Service.Lightbulb)
 
   service
