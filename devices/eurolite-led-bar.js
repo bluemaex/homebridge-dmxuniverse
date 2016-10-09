@@ -80,7 +80,7 @@ RgbAccessory.prototype.getState = function(who, callback) {
 RgbAccessory.prototype.setState = function(who, value, callback) {
   this[who] = value
 
-  this.setDmxState(callback)
+  this.setDmxState()
     .then(() => {
       this.log("Set %s state on the '%s' to %s", who, this.accessory.displayName, this[who])
       callback(null)
@@ -112,7 +112,7 @@ RgbAccessory.prototype.getDmxState = function() {
 }
 
 
-RgbAccessory.prototype.setDmxState = function(callback) {
+RgbAccessory.prototype.setDmxState = function() {
   var hsv = {
     h: this.hue,
     s: this.saturation,

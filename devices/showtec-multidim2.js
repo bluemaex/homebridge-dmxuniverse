@@ -61,7 +61,7 @@ DimmerAccessory.prototype.getState = function(who, callback) {
 DimmerAccessory.prototype.setState = function(who, value, callback) {
   this[who] = (who === 'power') ? value : value / 100 * 255
 
-  this.setDmxState(callback)
+  this.setDmxState()
     .then(() => {
       this.log("Set %s state on the '%s' to %s", who, this.accessory.displayName, this[who])
       callback(null)
