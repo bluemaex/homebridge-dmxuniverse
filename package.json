@@ -1,6 +1,6 @@
 {
   "name": "homebridge-dmxuniverse",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "DMX Plugin for homebridge: https://github.com/nfarina/homebridge",
   "license": "MIT",
   "keywords": [
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/bluemaex/homebridge-dmx.git"
+    "url": "git://github.com/bluemaex/homebridge-dmxuniverse.git"
   },
   "dependencies": {
     "colorsys": "^1.0.9",
