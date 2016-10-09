@@ -46,24 +46,24 @@ DmxPlatform.prototype.getDmxUniverses = function() {
 
 DmxPlatform.prototype.handleDmxDevice = function(universe, device) {
   switch(device.type) {
-    case 'eurolite-led-bar': {
-      this.log('eurolite-led-bar', device.name)
-      return this.findAccessory(device.name)
-        ? null
-        : this.createAccessory(universe, device)
-    }
     case 'showtec-multidim2': {
-      this.log('showtec-multidim2', device.name)
-      device.config.channels.forEach((channel, num) => {
+      return device.config.channels.forEach((channel, num) => {
         const subDevice = Object.assign({}, device, {
           name: device.name + ':' + channel,
           channels: [channel],
           subNum: num
         })
-        return this.findAccessory(subDevice.name)
+
+        this.findAccessory(subDevice.name)
           ? null
           : this.createAccessory(universe, subDevice)
       })
+    }
+
+    default: {
+      return this.findAccessory(device.name)
+        ? null
+        : this.createAccessory(universe, device)
     }
   }
 }
