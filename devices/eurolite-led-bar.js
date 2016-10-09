@@ -56,8 +56,6 @@ RgbAccessory.prototype.configure = function() {
       .getCharacteristic(Characteristic.Saturation)
       .on('get', this.getState.bind(this, 'saturation'))
       .on('set', this.setState.bind(this, 'saturation'))
-
-  this.accessory.on('identify', this.identify.bind(this))
 }
 
 RgbAccessory.prototype.identify = function(paired, callback) {

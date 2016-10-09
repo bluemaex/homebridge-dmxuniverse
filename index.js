@@ -16,8 +16,6 @@ module.exports = function (homebridge) {
 
 function DmxPlatform(log, config, api) {
   this.accessories = []
-  this.devices = {}
-
   this.api = api
   this.config = config
   this.log = log
@@ -92,10 +90,9 @@ DmxPlatform.prototype.createAccessory = function(universe, device) {
 DmxPlatform.prototype.configureAccessory = function(accessory) {
   this.log(`Configuring Accessory ${accessory.displayName}`)
 
-  const driver = this.getDeviceDriver(accessory)
-  driver.setupCharacteristics()
-  driver.configure()
-  this.devices[accessory.displayName] = driver
+  accessory.reachable = true
+  accessory.dmx = this.configureDeviceDriver(accessory)
+  accessory.on('identify', accessory.dmx.identify.bind(accessory.dmx))
 
   this.accessories.push(accessory)
 
@@ -103,9 +100,14 @@ DmxPlatform.prototype.configureAccessory = function(accessory) {
   this.log(`offsets for ${accessory.displayName} are ${JSON.stringify(offsets)}`)
 }
 
-DmxPlatform.prototype.getDeviceDriver = function(accessory) {
+DmxPlatform.prototype.configureDeviceDriver = function(accessory) {
   const type = accessory.context.device.type
-  return new DeviceDriver[type](accessory, this.log, this.config.dmx)
+  const driver = new DeviceDriver[type](accessory, this.log, this.config.dmx)
+
+  driver.setupCharacteristics()
+  driver.configure()
+
+  return driver
 }
 
 DmxPlatform.prototype.setManufacturer = function(accessory) {

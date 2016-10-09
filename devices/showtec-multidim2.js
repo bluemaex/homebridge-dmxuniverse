@@ -37,8 +37,6 @@ DimmerAccessory.prototype.configure = function() {
       .getCharacteristic(Characteristic.Brightness)
       .on('get', this.getState.bind(this, 'value'))
       .on('set', this.setState.bind(this, 'value'))
-
-  this.accessory.on('identify', this.identify.bind(this))
 }
 
 DimmerAccessory.prototype.identify = function(paired, callback) {
