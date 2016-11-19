@@ -3,7 +3,7 @@ const Characteristic = require('hap-nodejs').Characteristic
 const colorsys = require('colorsys')
 var utils = require('./_utils')
 
-function RgbAccessory(accessory, log, config) {
+function EuroLiteLedBar(accessory, log, config) {
   this.log = log
   this.accessory = accessory
   this.config = config
@@ -17,7 +17,7 @@ function RgbAccessory(accessory, log, config) {
   this.saturation = 0
 }
 
-RgbAccessory.prototype.setupCharacteristics = function() {
+EuroLiteLedBar.prototype.setupCharacteristics = function() {
   if(!this.accessory.getService(Service.Lightbulb)) {
     this.accessory.addService(Service.Lightbulb, this.accessory.displayName)
   }
@@ -34,7 +34,7 @@ RgbAccessory.prototype.setupCharacteristics = function() {
   }
 }
 
-RgbAccessory.prototype.configure = function() {
+EuroLiteLedBar.prototype.configure = function() {
   const service = this.accessory.getService(Service.Lightbulb)
 
   service
@@ -58,12 +58,12 @@ RgbAccessory.prototype.configure = function() {
       .on('set', this.setState.bind(this, 'saturation'))
 }
 
-RgbAccessory.prototype.identify = function(paired, callback) {
+EuroLiteLedBar.prototype.identify = function(paired, callback) {
   this.log("%s please identify yourself!", this.accessory.displayName)
   callback(null)
 }
 
-RgbAccessory.prototype.getState = function(who, callback) {
+EuroLiteLedBar.prototype.getState = function(who, callback) {
   this.getDmxState()
     .then(() => {
       this.log("%s state for the '%s' is %s", who, this.accessory.displayName, this[who])
@@ -75,7 +75,7 @@ RgbAccessory.prototype.getState = function(who, callback) {
     })
 }
 
-RgbAccessory.prototype.setState = function(who, value, callback) {
+EuroLiteLedBar.prototype.setState = function(who, value, callback) {
   this[who] = value
 
   this.setDmxState()
@@ -89,7 +89,7 @@ RgbAccessory.prototype.setState = function(who, value, callback) {
     })
 }
 
-RgbAccessory.prototype.getDmxState = function() {
+EuroLiteLedBar.prototype.getDmxState = function() {
   return utils.httpGet(this.stateUrl)
     .then((body) => {
       const rgb = {
@@ -110,7 +110,7 @@ RgbAccessory.prototype.getDmxState = function() {
 }
 
 
-RgbAccessory.prototype.setDmxState = function() {
+EuroLiteLedBar.prototype.setDmxState = function() {
   var hsv = {
     h: this.hue,
     s: this.saturation,
@@ -130,4 +130,4 @@ RgbAccessory.prototype.setDmxState = function() {
   return utils.httpPost(this.stateUrl, data)
 }
 
-module.exports = RgbAccessory
+module.exports = EuroLiteLedBar

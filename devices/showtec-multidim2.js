@@ -2,7 +2,7 @@ const Service = require('hap-nodejs').Service
 const Characteristic = require('hap-nodejs').Characteristic
 var utils = require('./_utils')
 
-function DimmerAccessory(accessory, log, config) {
+function ShowtecMultidim(accessory, log, config) {
   this.log = log
   this.accessory = accessory
   this.config = config
@@ -14,7 +14,7 @@ function DimmerAccessory(accessory, log, config) {
   this.value = 0
 }
 
-DimmerAccessory.prototype.setupCharacteristics = function() {
+ShowtecMultidim.prototype.setupCharacteristics = function() {
   if(!this.accessory.getService(Service.Lightbulb)) {
     this.accessory.addService(Service.Lightbulb, this.accessory.displayName)
   }
@@ -25,7 +25,7 @@ DimmerAccessory.prototype.setupCharacteristics = function() {
   }
 }
 
-DimmerAccessory.prototype.configure = function() {
+ShowtecMultidim.prototype.configure = function() {
   const service = this.accessory.getService(Service.Lightbulb)
 
   service
@@ -39,12 +39,12 @@ DimmerAccessory.prototype.configure = function() {
       .on('set', this.setState.bind(this, 'value'))
 }
 
-DimmerAccessory.prototype.identify = function(paired, callback) {
+ShowtecMultidim.prototype.identify = function(paired, callback) {
   this.log("%s please identify yourself!", this.accessory.displayName)
   callback(null)
 }
 
-DimmerAccessory.prototype.getState = function(who, callback) {
+ShowtecMultidim.prototype.getState = function(who, callback) {
   this.getDmxState()
     .then(() => {
       this.log("%s state for the '%s' is %s", who, this.accessory.displayName, this[who])
@@ -56,7 +56,7 @@ DimmerAccessory.prototype.getState = function(who, callback) {
     })
 }
 
-DimmerAccessory.prototype.setState = function(who, value, callback) {
+ShowtecMultidim.prototype.setState = function(who, value, callback) {
   this[who] = (who === 'power') ? value : value / 100 * 255
 
   this.setDmxState()
@@ -70,7 +70,7 @@ DimmerAccessory.prototype.setState = function(who, value, callback) {
     })
 }
 
-DimmerAccessory.prototype.getDmxState = function() {
+ShowtecMultidim.prototype.getDmxState = function() {
   return utils.httpGet(this.stateUrl)
     .then((body) => {
 
@@ -82,8 +82,7 @@ DimmerAccessory.prototype.getDmxState = function() {
     })
 }
 
-
-DimmerAccessory.prototype.setDmxState = function() {
+ShowtecMultidim.prototype.setDmxState = function() {
   var data = {
     [this.offset]: this.power === 1 ? this.value : 0
   }
@@ -91,4 +90,4 @@ DimmerAccessory.prototype.setDmxState = function() {
   return utils.httpPost(this.stateUrl, data)
 }
 
-module.exports = DimmerAccessory
+module.exports = ShowtecMultidim
