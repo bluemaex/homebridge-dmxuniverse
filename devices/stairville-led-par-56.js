@@ -76,17 +76,8 @@ StairvilleLedPar.prototype.getState = function(who, callback) {
 }
 
 StairvilleLedPar.prototype.setState = function(who, value, callback) {
-  if(who === 'power') {
-    if(value === 0) {
-      this.brightness = this.hue = this.saturation = 0
-    }
-    if(value === 1 && this[who] !== value) { 
-      this.brightness = this.hue = this.saturation = 255
-    }
-  }
-  
   this[who] = value
-  
+
   this.setDmxState()
     .then(() => {
       this.log("Set %s state on the '%s' to %s", who, this.accessory.displayName, this[who])
@@ -121,15 +112,15 @@ StairvilleLedPar.prototype.getDmxState = function() {
 
 StairvilleLedPar.prototype.setDmxState = function() {
   var hsv = {
-    h: this.hue,
-    s: this.saturation,
-    v: this.brightness
+    h: this.power ? this.hue : 0,
+    s: this.power ? this.saturation : 0,
+    v: this.power ? this.brightness : 0, 
   }
   var rgb = colorsys.hsv_to_rgb(hsv)
   this.log('hsv', hsv, 'to rgb', rgb)
 
   var data = {
-    [this.offsets.ctrl]: this.power ? 16 : 0,
+    [this.offsets.ctrl]: 0,
     [this.offsets.red]: rgb.r,
     [this.offsets.green]: rgb.g,
     [this.offsets.blue]: rgb.b
