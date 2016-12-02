@@ -1,6 +1,6 @@
 {
   "name": "homebridge-dmxuniverse",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "DMX Plugin for homebridge: https://github.com/nfarina/homebridge",
   "license": "MIT",
   "keywords": [
