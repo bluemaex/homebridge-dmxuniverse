@@ -101,9 +101,9 @@ EuroLiteLedBar.prototype.getDmxState = function() {
       this.log('rgb', rgb, 'to hsv', hsv)
 
       this.power = body.state[this.offsets.ctrl] > 0
-      this.hue = hsv[0].h
-      this.saturation = hsv[0].s
-      this.brightness = hsv[0].v
+      this.hue = hsv.h
+      this.saturation = hsv.s
+      this.brightness = hsv.v
 
       return Promise.resolve()
     })

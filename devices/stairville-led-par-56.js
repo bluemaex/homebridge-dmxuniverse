@@ -98,12 +98,12 @@ StairvilleLedPar.prototype.getDmxState = function() {
         b: body.state[this.offsets.blue]
       }
       const hsv = colorsys.rgb_to_hsv(rgb)
-      this.log('rgb', rgb, 'to hsv', hsv)
+      this.log('rgb', rgb, 'to hsv', hsv, 'control', body.state[this.offsets.ctrl])
 
-      this.power = body.state[this.offsets.ctrl] > 0
-      this.hue = hsv[0].h
-      this.saturation = hsv[0].s
-      this.brightness = hsv[0].v
+      this.power = body.state[this.offsets.ctrl] > 0 || hsv.v > 0
+      this.hue = hsv.h
+      this.saturation = hsv.s
+      this.brightness = hsv.v
 
       return Promise.resolve()
     })
@@ -114,7 +114,7 @@ StairvilleLedPar.prototype.setDmxState = function() {
   var hsv = {
     h: this.power ? this.hue : 0,
     s: this.power ? this.saturation : 0,
-    v: this.power ? this.brightness : 0, 
+    v: this.power ? this.brightness : 0,
   }
   var rgb = colorsys.hsv_to_rgb(hsv)
   this.log('hsv', hsv, 'to rgb', rgb)
