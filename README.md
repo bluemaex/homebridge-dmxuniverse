@@ -1,6 +1,6 @@
 # homebridge-dmxuniverse
 
-An homebridge platform plugin that creates homekit accessoires based on your [DMX universes](https://github.com/wiedi/node-dmx).
+An homebridge platform plugin that creates homekit accessories based on your [DMX universes](https://github.com/wiedi/node-dmx).
 
 # Configuration
 
