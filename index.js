@@ -44,21 +44,36 @@ DmxPlatform.prototype.getDmxUniverses = function() {
 
 DmxPlatform.prototype.handleDmxDevice = function(universe, device) {
   switch(device.type) {
-    case 'showtec-multidim2': {
-      return device.config.channels.forEach((channel, num) => {
-        const subDevice = Object.assign({}, device, {
-          name: device.name + ':' + channel,
-          channels: [channel],
-          subNum: num
-        })
+  case 'ultra-pro-6rgbch-rdm':  {
+      return device.config.channelgoups.forEach((channel, num) => {
+          const subDevice = Object.assign({}, device, {
+              name: device.name + ':' + channel,
+              channels: [channel],
+              subNum: num
+          })
 
-        this.findAccessory(subDevice.name)
+          this.findAccessory(subDevice.name)
+              ? null
+              : this.createAccessory(universe, subDevice)
+      })
+  }
+
+  case 'ultra-pro-24ch-rdm':
+  case 'showtec-multidim2': {
+      return device.config.channels.forEach((channel, num) => {
+          const subDevice = Object.assign({}, device, {
+              name: device.name + ':' + channel,
+              channels: [channel],
+              subNum: num
+          })
+
+          this.findAccessory(subDevice.name)
           ? null
           : this.createAccessory(universe, subDevice)
-      })
-    }
+  })
+  }
 
-    default: {
+  default: {
       return this.findAccessory(device.name)
         ? null
         : this.createAccessory(universe, device)
