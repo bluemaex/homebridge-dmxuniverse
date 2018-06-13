@@ -45,7 +45,7 @@ DmxPlatform.prototype.getDmxUniverses = function() {
 DmxPlatform.prototype.handleDmxDevice = function(universe, device) {
   switch(device.type) {
   case 'ultra-pro-6rgbch-rdm':  {
-      return device.config.channelgoups.forEach((channel, num) => {
+      return device.config.channelgroups.forEach((channel, num) => {
           const subDevice = Object.assign({}, device, {
               name: device.name + ':' + channel,
               channels: [channel],
